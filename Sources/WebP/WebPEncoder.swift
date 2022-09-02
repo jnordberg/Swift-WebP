@@ -119,13 +119,13 @@ public struct WebPEncoder {
             return WebPMemoryWrite(data, size, picture)
         }
         picture.writer = writeWebP
-        picture.custom_ptr = UnsafeMutableRawPointer(&buffer)
-
-        if WebPEncode(&config, &picture) == 0 {
-            WebPPictureFree(&picture)
-
-            let error = WebPEncodeStatusCode(rawValue:  Int(picture.error_code.rawValue))!
-            throw error
+        try withUnsafeMutablePointer(to: &buffer) { ptr in
+            picture.custom_ptr = UnsafeMutableRawPointer(ptr)
+            if WebPEncode(&config, &picture) == 0 {
+                WebPPictureFree(&picture)
+                let error = WebPEncodeStatusCode(rawValue:  Int(picture.error_code.rawValue))!
+                throw error
+            }
         }
         WebPPictureFree(&picture)
 

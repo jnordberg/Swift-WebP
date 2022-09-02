@@ -4,7 +4,7 @@ import CWebP
 public struct WebPImageInspector {
 
     public static func inspect(_ webPData: Data) throws -> WebPBitstreamFeatures {
-        var cFeature = UnsafeMutablePointer<CWebP.WebPBitstreamFeatures>.allocate(capacity: 1)
+        let cFeature = UnsafeMutablePointer<CWebP.WebPBitstreamFeatures>.allocate(capacity: 1)
         defer { cFeature.deallocate() }
 
         let status = try webPData.withUnsafeBytes { rawPtr -> VP8StatusCode in
